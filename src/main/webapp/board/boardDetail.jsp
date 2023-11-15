@@ -10,10 +10,14 @@
 	body {
 		margin: 100px ;
 	}
+	p {
+		padding: 10px ;
+	}
 </style>
 </head>
 <body>
 
+<h3>상세보기</h3>
 <%
 	if(request.getAttribute("one") != null) {
 		BoardDto dto = (BoardDto)request.getAttribute("one") ;
@@ -39,8 +43,12 @@
 	});
 	
 	deleteBtn.addEventListener('click', function() {
-		alert('게시물을 삭제합니다!') ;
-		location.href="/board/delete.jsp?num=<%= dto.getNum() %>" ;
+		if(window.confirm('정말 삭제하시겠습니까?')) {
+			location.href="/board/delete.jsp?num=<%= dto.getNum() %>" ;
+		} else {
+			
+		}
+		
 	});
 </script>
 

@@ -7,6 +7,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	body {
+		margin: 100px ;
+	}
+</style>
 </head>
 <body>
 

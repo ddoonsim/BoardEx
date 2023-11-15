@@ -36,7 +36,33 @@ public class BoardDao extends DBConnPool{
 		return list ;
 	}
 	
-	// 게시글 1개 선택
+	/**
+	 * 새 글 작성 메서드
+	 */
+	public void newWrite(String title, String content, String id) {
+		String sql = "insert into board  (num, title, content, id, postdate, visitcount) \r\n"
+				+ "	values (seq_board_num.nextval, ?, ?, ?, sysdate, 0)" ;
+		
+		try {
+			pstmt = con.prepareStatement(sql) ;
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, id);
+			
+			pstmt.executeUpdate() ;
+			System.out.println("게시물을 생성했습니다.");
+			
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 지정한 게시글 1개 얻는 메서드 
+	 * @param num
+	 * @return
+	 */
 	public BoardDto getOne(String num) {
 		BoardDto dto = new BoardDto() ;
 		String sql = "select * from board where num = ?" ;
@@ -111,6 +137,7 @@ public class BoardDao extends DBConnPool{
 			System.out.println("게시물을 삭제했습니다.");
 		} 
 		catch (SQLException e) {
+			System.out.println("⚠️삭제 중 예외가 발생하였습니다.");
 			e.printStackTrace();
 		}
 	}

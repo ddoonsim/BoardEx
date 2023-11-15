@@ -47,7 +47,7 @@
 		if(createNew != null) {
 			createNew.addEventListener('click', function() {
 				alert('새 글 작성') ;
-				location.href="/board/write.jsp" ; // 여기까지.. 11/14
+				location.href="/board/write.jsp" ;
 			});
 		}
 	}
