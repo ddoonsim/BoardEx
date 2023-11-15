@@ -14,9 +14,13 @@
 <%
 	String num = request.getParameter("num") ;
 	BoardDao dao = new BoardDao() ;
-	dao.delete(num) ;
+	int res = dao.delete(num) ;
 	
-	response.sendRedirect("/list") ;
+	out.print("<script type='text/javascript'>") ;
+	out.print("	alert('게시물을 " + res + "건 삭제했습니다.') ;") ;
+	out.print("	location.href='/list' ;") ;
+	out.print("</script>") ;
+	
 %>
 
 </body>

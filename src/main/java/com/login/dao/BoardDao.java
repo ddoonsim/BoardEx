@@ -133,19 +133,20 @@ public class BoardDao extends DBConnPool{
 	/**
 	 * 게시글 삭제하는 메서드
 	 */
-	public void delete(String num) {
+	public int delete(String num) {
+		int res = 0 ;
 		String sql = "delete from board where num = ?" ;
 		
 		try {
 			pstmt = con.prepareStatement(sql) ;
 			pstmt.setString(1, num);
-			pstmt.executeUpdate() ;
-			System.out.println("게시물을 삭제했습니다.");
+			res = pstmt.executeUpdate() ;
 		} 
 		catch (SQLException e) {
 			System.out.println("⚠️삭제 중 예외가 발생하였습니다.");
 			e.printStackTrace();
 		}
+		return res ;
 	}
 
 }
