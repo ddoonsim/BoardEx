@@ -18,7 +18,6 @@
 	}
 	table {
 		width: 700px ;
-		height: 200px ;
 	}
 	a {
 		text-decoration: none ;
