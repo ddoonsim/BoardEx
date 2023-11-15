@@ -9,10 +9,13 @@ import com.login.dto.BoardDto;
 
 public class BoardDao extends DBConnPool{
 	
+	/**
+	 * DB로부터 게시글의 목록을 조회하여 list에 담아 반환하는 메서드
+	 * @return List<BoardDto>타입
+	 */
 	public List<BoardDto> getList() {
 		List<BoardDto> list = new ArrayList<>() ;
 		
-		// DB로부터 게시글의 목록을 조회하여 list에 담아 변환
 		String sql = "select * from board order by num" ;
 		try {
 			stmt = con.createStatement() ;
@@ -88,7 +91,10 @@ public class BoardDao extends DBConnPool{
 		return dto ;
 	}
 	
-	// 조회수 +1
+	/**
+	 * 조회수 +1 하는 메서드
+	 * @param num
+	 */
 	public void plusVisitCount(String num) {
 		String sql = "update board set visitcount = visitcount + 1 where num = ?" ;
 		
