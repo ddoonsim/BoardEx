@@ -11,24 +11,34 @@ public class BoardDao extends DBConnPool{
 	
 	/**
 	 * DB로부터 게시글의 목록을 조회하여 list에 담아 반환하는 메서드
+	 * + 페이징 처리
 	 * @return List<BoardDto>타입
 	 */
-	public List<BoardDto> getList() {
+	public List<BoardDto> getList(int startNum, int endNum) {
 		List<BoardDto> list = new ArrayList<>() ;
 		
-		String sql = "select * from board order by num" ;
+		// String sql = "select * from board order by num" ;
+		String sql = "select *\r\n"
+				+ "from (select rownum rnum, b.*\r\n"
+				+ "        from (select * from board \r\n"
+				+ "                order by num desc) b)\r\n"
+				+ "where rnum between ? and ?" ;
+		
 		try {
-			stmt = con.createStatement() ;
-			rs = stmt.executeQuery(sql) ;
+			pstmt = con.prepareStatement(sql) ;
+			pstmt.setInt(1, startNum);    // 시작 번호 = 끝 번호 -(페이지 당 게시물 개수 - 1)
+			pstmt.setInt(2, endNum);   // 끝 번호 = 페이지 번호 * 페이지 당 게시물 개수
+			
+			rs = pstmt.executeQuery() ;
 			
 			while(rs.next()) {
 				BoardDto dto = new BoardDto() ;
-				dto.setNum(rs.getString(1));
-				dto.setTitle(rs.getString(2));
-				dto.setContent(rs.getString(3));
-				dto.setId(rs.getString(4));
-				dto.setPostdate(rs.getString(5));
-				dto.setVisitcount(rs.getString(6));
+				dto.setNum(rs.getString(2));
+				dto.setTitle(rs.getString(3));
+				dto.setContent(rs.getString(4));
+				dto.setId(rs.getString(5));
+				dto.setPostdate(rs.getString(6));
+				dto.setVisitcount(rs.getString(7));
 				
 				list.add(dto) ;
 			}
