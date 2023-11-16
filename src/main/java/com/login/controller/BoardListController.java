@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.login.dao.BoardDao;
 import com.login.dto.BoardDto;
+import com.login.dto.Criteria;
+import com.login.dto.PageDto;
 
 /**
  * 게시글 목록을 조회하고 반환
@@ -22,26 +24,16 @@ public class BoardListController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BoardDao dao = new BoardDao() ;
 		
-		// 페이징 처리
-		int pageNo = 1 ;
-		int amount = 10 ;
-		// 전달된 값이 있으면 변경, 없으면 기본값
-		if(request.getParameter("pageNo") != null && 
-				!"".equals(request.getParameter("pageNo"))) {
-			pageNo = Integer.parseInt(request.getParameter("pageNo")) ;
-		}
-		if(request.getParameter("amount") != null && 
-				!"".equals(request.getParameter("amount"))) {
-			amount = Integer.parseInt(request.getParameter("amount")) ;
-		}
-		// 시작 번호, 끝 번호
-		int endNum = pageNo * amount ;
-		int startNum = endNum - (amount - 1) ;
+		// 페이지 번호와 페이지 당 게시물 개수를 설정수 조회할 게시물의 시작 번호와 끝 번호 가져오기
+		Criteria cri = new Criteria(request.getParameter("pageNo"), request.getParameter("amount")) ;
+		int total = dao.getTotalCnt() ;
+		// 페이지 블럭을 생성하기 위해 PageDto를 생성 및 저장
+		PageDto pageDto = new PageDto(total, cri) ;
+
+		request.setAttribute("list", dao.getList(cri));
+		request.setAttribute("pageDto", pageDto);
 		
-		List<BoardDto> list = dao.getList(startNum, endNum) ;
 		dao.close();
-		
-		request.setAttribute("list", list);
 		request.getRequestDispatcher("/board/board.jsp").forward(request, response);
 	}
 

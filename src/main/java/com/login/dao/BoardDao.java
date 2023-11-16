@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.login.common.DBConnPool;
 import com.login.dto.BoardDto;
+import com.login.dto.Criteria;
 
 public class BoardDao extends DBConnPool{
 	
@@ -14,10 +15,9 @@ public class BoardDao extends DBConnPool{
 	 * + 페이징 처리
 	 * @return List<BoardDto>타입
 	 */
-	public List<BoardDto> getList(int startNum, int endNum) {
+	public List<BoardDto> getList(Criteria cri) {
 		List<BoardDto> list = new ArrayList<>() ;
 		
-		// String sql = "select * from board order by num" ;
 		String sql = "select *\r\n"
 				+ "from (select rownum rnum, b.*\r\n"
 				+ "        from (select * from board \r\n"
@@ -26,23 +26,25 @@ public class BoardDao extends DBConnPool{
 		
 		try {
 			pstmt = con.prepareStatement(sql) ;
-			pstmt.setInt(1, startNum);    // 시작 번호 = 끝 번호 -(페이지 당 게시물 개수 - 1)
-			pstmt.setInt(2, endNum);   // 끝 번호 = 페이지 번호 * 페이지 당 게시물 개수
+			pstmt.setInt(1, cri.getStartNo());    // 시작 번호 = 끝 번호 -(페이지 당 게시물 개수 - 1)
+			pstmt.setInt(2, cri.getEndNo());   // 끝 번호 = 페이지 번호 * 페이지 당 게시물 개수
 			
 			rs = pstmt.executeQuery() ;
 			
 			while(rs.next()) {
 				BoardDto dto = new BoardDto() ;
-				dto.setNum(rs.getString(2));
-				dto.setTitle(rs.getString(3));
-				dto.setContent(rs.getString(4));
-				dto.setId(rs.getString(5));
-				dto.setPostdate(rs.getString(6));
-				dto.setVisitcount(rs.getString(7));
+				
+				dto.setNum(rs.getString("NUM"));
+				dto.setTitle(rs.getString("TITLE"));
+				dto.setContent(rs.getString("CONTENT"));
+				dto.setId(rs.getString("ID"));
+				dto.setPostdate(rs.getString("POSTDATE"));
+				dto.setVisitcount(rs.getString("VISITCOUNT"));
 				
 				list.add(dto) ;
 			}
 		} catch (SQLException e) {
+			System.out.println("getList()메서드 예외 발생");
 			e.printStackTrace();
 		}
 		
@@ -157,6 +159,27 @@ public class BoardDao extends DBConnPool{
 			e.printStackTrace();
 		}
 		return res ;
+	}
+
+	/**
+	 * 게시물의 총 개수를 구하는 메서드
+	 * @return
+	 */
+	public int getTotalCnt() {
+		int total = 0 ;
+		String sql = "select count(*) from board" ;
+		
+		try {
+			pstmt = con.prepareStatement(sql) ;
+			rs = pstmt.executeQuery() ;
+			if(rs.next()) {
+				total = rs.getInt(1) ;
+			}
+		} catch (SQLException e) {
+			System.out.println("게시물 총 개수를 구하는 과정에서 에러 발생");
+			e.printStackTrace();
+		}
+		return total;
 	}
 
 }
