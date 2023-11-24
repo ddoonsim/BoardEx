@@ -6,6 +6,7 @@ public class MemberDto {
 	private String pass ;
 	private String name ;
 	private String regidate ;
+	public String email ;
 	
 	public String getId() {
 		return id;
@@ -30,6 +31,12 @@ public class MemberDto {
 	}
 	public void setRegidate(String regidate) {
 		this.regidate = regidate;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

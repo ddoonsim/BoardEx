@@ -22,12 +22,13 @@ public class MemberDao extends DBConnPool{
 			rs = stmt.executeQuery(sql) ;
 			
 			while(rs.next()) {
-				if(id.equals(rs.getString(1)) && pw.equals(rs.getString(2))) {
-					dto = new MemberDto() ;
-					dto.setId(rs.getString(1));
-					dto.setPass(rs.getString(2));
-					dto.setName(rs.getString(3));
-					dto.setRegidate(rs.getString(4));
+				if(id.equals(rs.getString("id")) && pw.equals(rs.getString("pass"))) {
+					// 로그인 성공
+					dto.setId(rs.getString("id"));
+					dto.setPass(rs.getString("pass"));
+					dto.setName(rs.getString("name"));
+					dto.setRegidate(rs.getString("regidate"));
+					dto.setEmail(rs.getString("email"));
 				}
 			}
 		} 
@@ -60,5 +61,24 @@ public class MemberDao extends DBConnPool{
 //		}
 //		return dto ;
 //	}
+	
+	/**
+	 * Member 테이블에 회원 추가
+	 */
+	public void newMember(String id, String name, String email, String pw) {
+		String sql = "insert into member (id, pass, name, regidate, email)\r\n"
+				+ "values('"+id+"', '"+pw+"', '"+name+"', sysdate, '"+email+"')" ;
+		
+		try {
+			stmt = con.createStatement() ;
+			int n = stmt.executeUpdate(sql) ;
+			System.out.println("Member테이블에 " + n + "건 추가되었습니다.");
+		} 
+		catch (SQLException e) {
+			System.out.println("회원 추가 쿼리 실행 중 예외 발생");
+			e.printStackTrace();
+		}
+		
+	}
 
 }
