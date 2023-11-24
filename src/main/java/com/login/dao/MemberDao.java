@@ -65,20 +65,21 @@ public class MemberDao extends DBConnPool{
 	/**
 	 * Member 테이블에 회원 추가
 	 */
-	public void newMember(String id, String name, String email, String pw) {
+	public int newMember(String id, String name, String email, String pw) {
+		int res = 0 ;
 		String sql = "insert into member (id, pass, name, regidate, email)\r\n"
 				+ "values('"+id+"', '"+pw+"', '"+name+"', sysdate, '"+email+"')" ;
 		
 		try {
 			stmt = con.createStatement() ;
-			int n = stmt.executeUpdate(sql) ;
-			System.out.println("Member테이블에 " + n + "건 추가되었습니다.");
+			res = stmt.executeUpdate(sql) ;
+			System.out.println("Member테이블에 " + res + "건 추가되었습니다.");
 		} 
 		catch (SQLException e) {
 			System.out.println("회원 추가 쿼리 실행 중 예외 발생");
 			e.printStackTrace();
 		}
-		
+		return res ;
 	}
 
 }

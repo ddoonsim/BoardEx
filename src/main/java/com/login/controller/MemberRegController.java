@@ -16,21 +16,26 @@ public class MemberRegController extends HttpServlet {
        
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 회원가입 성공 -> msg&로그인페이지.jsp
+		// 파라미터 수집
 		String id = request.getParameter("id");
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String pw = request.getParameter("pw");
 		
+		// 회원 추가
 		MemberDao dao = new MemberDao() ;
-		dao.newMember(id, name, email, pw) ;
+		int res = dao.newMember(id, name, email, pw) ;
 		dao.close();
 		
-		request.setAttribute("success", "1");
-		request.getRequestDispatcher("/lib/loginForm.jsp").forward(request, response) ;
-		
-		// 회원가입 실패 -> msg&뒤로가기
-		request.setAttribute("msg", "회원정보가 올바르지 않습니다.") ;
+		if(res > 0) {
+			// 로그인 성공
+			request.setAttribute("msg", "회원가입 성공! 환영합니다🤗");
+			request.setAttribute("url", "/login.jsp");
+		} else {
+			// 회원가입 실패 -> msg&뒤로가기
+			request.setAttribute("msg", "회원가입 실패😢") ;
+		}
+		// 페이지 전환
 		request.getRequestDispatcher("/msgbox.jsp").forward(request, response) ;
 	}
 
